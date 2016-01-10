@@ -11,7 +11,8 @@ vim \
 curl \
 make \
 gcc \
-gcc-c++
+gcc-c++ \
+epel-release
 
 #install golang.
 RUN mkdir -p /goroot && \
@@ -25,9 +26,19 @@ ENV PATH $GOROOT/bin:$GOPATH/bin:$PATH
 RUN mkdir -p /nodejs && \
 	curl https://nodejs.org/dist/v4.2.4/node-v4.2.4-linux-x64.tar.gz | tar xvzf - -C /usr/local --strip-components=1
 
-#define default command.
-CMD ["bash"]
-
 #define working directory.
-WORKDIR /gopath
+RUN mkdir -p /opt/tourdezin/
+WORKDIR /opt/tourdezin/
+
+#build tdz_web app.
+COPY ./src/tdz_web/package.json tdz_web/package.json
+RUN cd tdz_web/; npm install
+
+COPY ./src /opt/tourdezin/
+
+EXPOSE 8080
+
+#define default command.
+CMD ["node", "/opt/tourdezin/tdz_web/app.js"]
+
 
