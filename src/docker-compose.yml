@@ -1,0 +1,20 @@
+app:
+  build: .
+  command: sh -c 'npm install --unsafe-perm ; npm install -g gulp ; gulp migrate; gulp dev'
+  ports:
+    - "8080:8080"
+  links:
+    - db
+  volumes:
+    - /sync/app:/app #/sync is defined in the vagrant file
+
+db:
+  image: mysql
+  ports:
+    - "3306:3306"
+  environment:
+    - MYSQL_DATABASE=jpdb
+    - MYSQL_ROOT_PASSWORD=jp_password
+
+    
+    
